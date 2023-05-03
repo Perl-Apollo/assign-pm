@@ -1,0 +1,31 @@
+=meta: 0.0.2
+
+name: assign
+version: 0.0.1
+abstract: Enable Destructuring Assignment Syntax in Perl
+homepage: https://metacpan.org/release/assign
+language: perl
+license: perl
+copyright: 2023
+
+author:
+  name: Ingy döt Net
+  email: ingy@cpan.org
+  homepage: http://ingy.net
+  github: ingydotnet
+  twitter: ingydotnet
+  freenode: ingy
+
+devel:
+  git: https://github.com/ingydotnet/assign-pm
+  bug: https://github.com/ingydotnet/assign-pm/issues
+  irc: irc.freenode.net#pkg
+
+requires:
+  perl: 5.16.0
+
+
+=zild:
+  no-about: true
+  no-readme: true
+  no-travis: true
