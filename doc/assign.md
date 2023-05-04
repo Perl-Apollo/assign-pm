@@ -6,7 +6,9 @@ Enable Destructuring Assignment Syntax in Perl
 # Synopsis
 
 ```
-my {$foo, bar => [ $x1, $x2, @xs ]} = $self->data;
+use assign -ALPHA;
+
+my {$foo, bar => [ $first, @rest, $last ]} = $self->data;
 ```
 
 # Status
