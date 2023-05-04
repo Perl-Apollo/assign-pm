@@ -51,9 +51,10 @@ my { k1 => [ $x1, $x2 ]} = …            # Unpack array ref nested in hash (no 
 for my { $k => [ $x1, $x2 ]} (@list) {  # Unpack each collection from a list
 for my { $k => $v} (%hash) { …          # Unpack each key/val pair from a hash
 
-# Advanced:
+# In signatures:
+sub foo($a, {$k1, [$x1, $x2]}) {
 
-### Inline list expressions:
+# Inline list expressions:
 my [ $a, @l{reverse}, $y, $z ] = …
 my [ $a, @l{map ($_ + 1), grep ($_ > 10)}, $z ] = …
 my [ $a, @{join '-'} => $s, $z ] = …
