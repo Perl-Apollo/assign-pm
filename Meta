@@ -19,13 +19,16 @@ author:
 devel:
   git: https://github.com/ingydotnet/assign-pm
   bug: https://github.com/ingydotnet/assign-pm/issues
-  irc: irc.freenode.net#pkg
 
 requires:
   perl: 5.16.0
-
+  Filter::Simple: 0.95
+  PPI: 1.276
+  XXX: 0.38
+  YAML::PP: 0.35
 
 =zild:
   no-about: true
   no-readme: true
   no-travis: true
+  test-000: none
