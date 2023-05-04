@@ -51,8 +51,19 @@ my { k1 => [ $x1, $x2 ]} = …            # Unpack array ref nested in hash (no 
 for my { $k => [ $x1, $x2 ]} (@list) {  # Unpack each collection from a list
 for my { $k => $v} (%hash) { …          # Unpack each key/val pair from a hash
 
+# From pipeline:
+my [$a1, $a2, $a3, @rest] = map …, @x;
+
 # In signatures:
-sub foo($a, {$k1, [$x1, $x2]}) {
+sub foo($a, {$k1, [$x1, $x2]}) { … }
+sub foo({
+    $name = "Fred",
+    number => $num = 42,
+}) { … }
+
+# Regex:
+my [$match, $cap1, $cap2] = $str =~ /…/;
+my [$match, $cap1, $cap2] = /…/;        # Match using $_
 
 # Inline list expressions:
 my [ $a, @l{reverse}, $y, $z ] = …
