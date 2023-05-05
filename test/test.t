@@ -35,6 +35,10 @@ my [ @a, @b, @c ] = …                   # Evenly distribute values over multip
 my [ @a, @_, @_ ] = …                   # Take every third element (0, 3, 6, ...)
 my [ @a, @19 ] = …                      # Take every 19th element
 
+[ $a, $b ] //= …
+[ $a, $b ] .= …
+[ $a, $b ] += …
+
 # Hash destructuring:
 my { $k1, $k2 } = $d;                   # Unpack a hash ref
 my { $k1, $k2 } = %d;                   # Unpack a hash
