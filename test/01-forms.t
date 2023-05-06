@@ -3,9 +3,9 @@ use assign::Test;
 # Array destructuring:
 
 test_transform <<'...', "Unpack aref into 'my' vars";
-my [ $x1, $x2 ] = $d;
+my [ $x1, $x2, $x3 ] = $d;
 +++
-my $x1 = $d->[0]; my $x2 = $d->[1];
+my $x1 = $d->[0]; my $x2 = $d->[1]; my $x3 = $d->[2];
 ...
 
 # test_transform <<'...', "Unpack a literal aref";
