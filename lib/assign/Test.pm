@@ -25,7 +25,7 @@ sub test_transform {
         or die "Invalid spec for 'test()'";
     my ($perl, $want) = ($1, $2);
 
-    my $got = assign->new->transform($perl);
+    my $got = assign->new(code => $perl)->transform;
 
     is $got, $want, $label;
 }
