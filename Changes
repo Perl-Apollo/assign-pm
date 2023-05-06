@@ -1,4 +1,9 @@
 ---
+version: 0.0.2
+date:    Sun May  7 12:15:57 AM CEST 2023
+changes:
+- First destructuring assignment form works
+---
 version: 0.0.1
 date:    Wed May  3 03:51:09 PM CEST 2023
 changes:
