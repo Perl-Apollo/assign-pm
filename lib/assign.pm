@@ -3,22 +3,33 @@ package assign;
 
 our $VERSION = '0.0.1';
 
-use Module::Compile -base;
-use Pegex;
-# use assign::Grammar;
+use Filter::Simple;
+use PPI;
+use XXX;
 
-sub pmc_compile {
-    my ($class, $code) = @_;
-    ::XXX $_ = $code;
+my $symbol = 1;
 
-    return q<print "hello\n";>;
+sub import {
+    defined $_[1] and $_[1] eq '0'
+        or die "Invalid 'use assign ...;' usage. Try 'use assign -0;'.";
 }
 
-sub pmc_output {
-    my ($class, $file, $output) = @_;
-    goto &Module::Compile::pmc_output if $file =~ /\.pm$/;
-    1 while $output =~ s/.*?\n\#line 1\n//s;
-    eval $output;
+FILTER_ONLY code_no_comments => \&filter;
+
+sub new { bless {}, shift }
+
+sub filter {
+    my ($class) = @_;
+
+    $_ = $class->new->transform($_);
+};
+
+sub transform {
+    my ($self, $code) = @_;
+
+    WWW + PPI::Document->new(\$code);
+
+    return $code;
 }
 
 1;
