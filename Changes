@@ -1,4 +1,9 @@
 ---
+version: 0.0.4
+date:    Sun May  7 08:38:40 AM CEST 2023
+changes:
+- Add "local" declarations
+---
 version: 0.0.3
 date:    Sun May  7 08:25:35 AM CEST 2023
 changes:
