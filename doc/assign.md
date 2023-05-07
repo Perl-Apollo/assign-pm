@@ -48,7 +48,7 @@ you want from a complex data structure in a single statement.
 
 This module is very new and experimental.
 The hope is that this may one day become a pragma module or possibly even part
-of Perl syntax.
+of the Perl language's syntax.
 
 To preserve backwards compatability for early adopters, the module currently
 requires you to `use assign -0;`.
@@ -182,10 +182,22 @@ my [ $a, @{join '-'} => $s, $z ] = $d;
 ```
 
 
+# Implementation
+
+All of the new assignment forms introduced here would cause Perl syntax or
+runtime  errors without using `assign.pm`.
+
+Currently this module is a working prototype that uses Filter::Simple (Perl
+source code filtering) and PPI.pm (to parse and restructure Perl code).
+
+When all the syntax forms have been implemented and fully tested and the module
+has become stable, it will be rewritten as an XS module.
+
+
 # Prior Art
 
 Destructuring assignment is available in many common languages.
-This module got many ideas from the others.
+The `assign` module got many ideas from these.
 
 * [CoffeeScript](
 https://alchaplinsky.github.io/hard-rock-coffeescript/syntax/destructuring_assignment.html)
