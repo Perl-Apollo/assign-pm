@@ -1,12 +1,13 @@
 use strict; use warnings;
-package assign::Test;
+package
+assign::Test;
 
 use Test::More;
 
 use base 'Exporter';
 
 our @EXPORT = qw(
-    test_transform
+    test
     is ok pass fail
 );
 
@@ -16,8 +17,14 @@ sub import {
     goto &Exporter::import;
 }
 
-sub test_transform {
+my $test_count = 0;
+sub test {
+    return if
+        defined $ENV{TEST_ONLY} and
+        $ENV{TEST_ONLY} != ++$test_count;
+
     require assign;
+    $assign::varid = 0;
 
     my ($spec, $label) = @_;
 

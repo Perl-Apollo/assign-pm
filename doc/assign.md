@@ -64,32 +64,37 @@ version of the module.
 
 Here we go...
 
-<!---
-* `my [$foo, $bar] = [111, 222];`
+* `my [$foo, $bar] = $array_ref;`
 
-  Define 2 `my` variables and assign the array-ref-literal values in order.
+  Define 2 `my` variables and assign the array-ref values in order.
+
   If there are less values on the RHS, the variables will be undefined.
   If there are more, they will be ignored.
 
-* `my {$foo, $bar} = {bar => 111, foo => 222};`
+  The RHS can be a variable or any expression as long as its value is an
+  array-ref.
 
-  Define 2 `my` variables and use the variable name as the key to extract from
-  the hash-ref on the RHS.
-
-* `my [$foo, $bar] = (111, 222);`   ERROR
+* `my [$foo, $bar] = (111, 222);`   **ERROR**
 
   If the LHS is an array-ref the RHS must also be an array-ref.
   If the LHS is a hash-ref the RHS must also be a hash-ref.
 
+<!---
 * `my ($foo, [$bar, $baz]) = (111, [222, 333]);`
 
   This works fine because the types match in the LHS and RHS lists.
 --->
 
-* `my [$foo, $bar] = $data;`
+* `our [$foo, $bar] = $array_ref;`
 
-  The RHS can be a variable or any expression as long as its value is an
-  array-ref.
+  Define 2 `our` variables and assign the array-ref values in order.
+
+<!---
+* `my {$foo, $bar} = {bar => 111, foo => 222};`
+
+  Define 2 `my` variables and use the variable name as the key to extract from
+  the hash-ref on the RHS.
+--->
 
 
 ## To Do
@@ -102,55 +107,54 @@ allow a structure to be assigned to.
 Here's the current list of things intended to be added soon:
 
 ```
-our [ $x1, $x2 ] = $d;                  # Unpack into 'our' vars
 my ( $x1, $x2 );
-[ $x1, $x2 ] = $d;                      # Unpack into pre-defined vars
+[ $x1, $x2 ] = $d;                  # Unpack into pre-defined vars
 
-my [ $x1, $x2=42 ] = $d;                # Set a default variable
-my [ $x1, @xs ] = $d;                   # Set remaining into an array
-my [ $x1, @xs, $x2 ] $d;                # Set all but first and last into array
-my [ _, $x2, _, $x4 ] = $d;             # Use _ ignore an array element
-my [ $x1, $_ ] = $d;                    # $_ actually sets $_
-my [ $first, [], $last ] = $d;          # Ignore middle
-my [ 25, $x26, $x27 ] = $d;             # Use a number to ignore muliple
-my [ $x1, $x2, -25 ] = $d;              # Take -27 and -26
+my [ $x1, $x2=42 ] = $d;            # Set a default variable
+my [ $x1, @xs ] = $d;               # Set remaining into an array
+my [ $x1, @xs, $x2 ] $d;            # Set all but first and last into array
+my [ _, $x2, _, $x4 ] = $d;         # Use _ ignore an array element
+my [ $x1, $_ ] = $d;                # $_ actually sets $_
+my [ $first, [], $last ] = $d;      # Ignore middle
+my [ 25, $x26, $x27 ] = $d;         # Use a number to ignore muliple
+my [ $x1, $x2, -25 ] = $d;          # Take -27 and -26
 
-my [ @a, @b, @c ] = $d;                 # Evenly distribute values over multiple arrays
-my [ @a, @_, @_ ] = $d;                 # Take every third element (0, 3, 6, ...)
-my [ @a, @19 ] = $d;                    # Take every 19th element
+my [ @a, @b, @c ] = $d;             # Evenly distribute values over multiple arrays
+my [ @a, @_, @_ ] = $d;             # Take every third element (0, 3, 6, ...)
+my [ @a, @19 ] = $d;                # Take every 19th element
 
 # Hash destructuring:
-my { $k1, $k2 } = $d;                   # Unpack a hash ref
-my { $k1, $k2 } = %d;                   # Unpack a hash
+my { $k1, $k2 } = $d;               # Unpack a hash ref
+my { $k1, $k2 } = %d;               # Unpack a hash
 
-my { k1 => $x, $k2 } = $d;              # Use a var name different than key
-my { k1 => $x=111, $k2=222 } = $d;      # Set default values
+my { k1 => $x, $k2 } = $d;          # Use a var name different than key
+my { k1 => $x=111, $k2=222 } = $d;  # Set default values
 
-my { $key => $val } = $d;               # Unpack a single pair hash
-my { @key => @val } = $d;               # Unpack all keys and values (unzip)
-my [ @key => @val ] = $d;               # Unpack all keys and values *sorted*
-my { @keys } = $d;                      # Key array of all keys
-my [ @keys ] = $d;                      # Key array of all keys *sorted* (RHS must be hashref)
-my { @keys => _ } = $d;                 #   Same as above
-my [ @keys => _ ] = $d;                 #   Same as above but *sorted*
-my { _ => @vals } = $d;                 # Get array of all values
+my { $key => $val } = $d;           # Unpack a single pair hash
+my { @key => @val } = $d;           # Unpack all keys and values (unzip)
+my [ @key => @val ] = $d;           # Unpack all keys and values *sorted*
+my { @keys } = $d;                  # Key array of all keys
+my [ @keys ] = $d;                  # Key array of all keys *sorted* (RHS must be hashref)
+my { @keys => _ } = $d;             #   Same as above
+my [ @keys => _ ] = $d;             #   Same as above but *sorted*
+my { _ => @vals } = $d;             # Get array of all values
 
-my { 'a-key', 'b.key' } = $d;           # Short for { 'a-key' => $a_key, 'b.key' => $b_key }
-my { 'foo bar' } = $d;                  # Short for { "foo bar" => $foo_bar }
+my { 'a-key', 'b.key' } = $d;       # Short for { 'a-key' => $a_key, 'b.key' => $b_key }
+my { 'foo bar' } = $d;              # Short for { "foo bar" => $foo_bar }
 
 # Nested destructuring:
-my { k1 => { $k2, $k3 }} = $d;          # Unpack nested hash (no $k1)
-my { $k1 => { $k2, $k3 }} = $d;         # Unpack nested hash w/ $k1 set to inner hash ref
-my { k1 => [ $x1, $x2 ]} = $d;          # Unpack array ref nested in hash (no nesting depth limit)
+my { k1 => { $k2, $k3 }} = $d;      # Unpack nested hash (no $k1)
+my { $k1 => { $k2, $k3 }} = $d;     # Unpack nested hash w/ $k1 set to inner hash ref
+my { k1 => [ $x1, $x2 ]} = $d;      # Unpack array ref nested in hash (no nesting depth limit)
 
 # Operator assignments:
-[ $a, $b ] //= $d;                      # Only assign undefined variables
-[ $a, $b ] .= $d;                       # Append string to every var
-[ $a, $b ] += $d;                       # Add number to every var
+[ $a, $b ] //= $d;                  # Only assign undefined variables
+[ $a, $b ] .= $d;                   # Append string to every var
+[ $a, $b ] += $d;                   # Add number to every var
 
 # In for loops:
 for my { $k => [ $x1, $x2 ]} (@list) {  # Unpack each collection from a list
-for my { $k => $v } (%hash) { $d;       # Unpack each key/val pair from a hash
+for my { $k => $v } (%hash) { $d;   # Unpack each key/val pair from a hash
 
 # In signatures:
 sub foo( $a, {$k1, [ $x1, $x2 ]} ) { … }
@@ -161,13 +165,14 @@ sub foo({
 
 # Regex:
 my [ $match, $cap1, $cap2 ] = $str =~ /…/;
-my [ $match, $cap1, $cap2 ] = /…/;      # Match using $_
+my [ $match, $cap1, $cap2 ] = /…/;  # Match using $_
 
 # Inline list expressions:
 my [ $a, @l{reverse}, $y, $z ] = $d;
 my [ $a, @l{map ($_ + 1), grep ($_ > 10)}, $z ] = $d;
 my [ $a, @{join '-'} => $s, $z ] = $d;
 ```
+
 
 # Prior Art
 
@@ -180,11 +185,13 @@ https://alchaplinsky.github.io/hard-rock-coffeescript/syntax/destructuring_assig
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
 * [Python](
 https://riptutorial.com/python/example/14981/destructuring-assignment)
+* [Clojure](
+https://clojure.org/guides/destructuring)
 
 
 # Authors
 
-* Ingy döt Net
+* Ingy döt Net `<ingy@ingy.net>`
 
 
 # Copyright and License

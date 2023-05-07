@@ -7,7 +7,7 @@ use Filter::Simple;
 use PPI;
 use XXX;
 
-my $symbol = 1;
+our $varid = 1000;
 
 sub import {
     defined $_[1] and $_[1] eq '0'
@@ -30,7 +30,6 @@ sub new {
 
 sub filter {
     my ($class) = @_;
-    local $; = 'xxxxxxx';
     $_ = $class->new(
         code => $_,
     )->transform();
@@ -60,7 +59,7 @@ sub transform_assignment_statements {
             $n->isa('PPI::Statement::Variable') and
             @{[$n->schildren]} >= 5 and
             $n->schild(0)->isa('PPI::Token::Word') and
-            $n->schild(0)->content eq 'my' and
+            $n->schild(0)->content =~ /^(my|our)$/ and
             $n->schild(1)->isa('PPI::Structure::Constructor') and
             $n->schild(2)->isa('PPI::Token::Operator') and
             $n->schild(2)->content eq '=';
@@ -70,35 +69,50 @@ sub transform_assignment_statements {
 sub transform_assignment_statement {
     my ($self, $node) = @_;
     my ($own, $lhs, $op, @rhs) = $node->schildren;
+
+    $self->{own} = $own->{content};
+    $self->{op} = $op->{content};
     my $rhs = join '', map $_->content, @rhs;
-    die "Not yet supported" unless
-        $lhs->start->content eq '[';
-    $own = $own->{content};
 
-    my $rhv;
-    if ($rhs =~ /^(\$\w+)\s*;/) {
-        $rhv = $1;
-    }
-    else {
-        XXX $rhs;
+    $self->{code} = [];
+    if ($lhs->start->content eq '[') {
+        $self->transform_aref($lhs, $rhs);
+    } elsif ($lhs->start->content eq '{') {
+        $self->transform_aref($lhs, $rhs);
+    } else {
+        ZZZ $node, "Unsupported statement";
     }
 
-    my @code;
-    my $i = 0;
-    do {
-        my $var = $_->content;
-        push @code, "$own $var = $rhv\->[$i];";
-        $i++;
-    } for map { $_ ||= []; @$_ }
-    $lhs->find('PPI::Token::Symbol');
+    my $code = join "\n", @{$self->{code}};
 
-    my $code = join ' ', @code;
-    # $code = q{my $x1 = $d->[0]; my $x2 = $d->[1];};
-
-    my $parent = $node->parent;
     $self->replace_statement_node($node, $code);
 
     return;
+}
+
+sub transform_aref {
+    my ($self, $lhs, $rhs) = @_;
+    my ($code, $own, $op) = @$self{qw<code own op>};
+    my $from;
+    if ($rhs =~ /^(\$\w+);/) {
+        $from = $1;
+    } else {
+        $from = $self->genvar;
+        push @$code, "my $from = $rhs";
+    }
+    my $i = 0;
+    do {
+        my $var = $_->content;
+        push @$code, "$own $var $op $from\->[$i];";
+        $i++;
+    } for map { $_ ||= []; @$_ }
+    $lhs->find('PPI::Token::Symbol');
+    return;
+}
+
+sub genvar {
+    $varid++;
+    return "\$___${varid}";
 }
 
 sub replace_statement_node {

@@ -2,14 +2,27 @@ use assign::Test;
 
 # Array destructuring:
 
-test_transform <<'...', "Unpack aref into 'my' vars";
-my [ $x1, $x2, $x3 ] = $d;
+test <<'...', "Unpack aref into 'my' vars";
+my [ $a, $b, $c ] = $aref;
 +++
-my $x1 = $d->[0]; my $x2 = $d->[1]; my $x3 = $d->[2];
+my $a = $aref->[0];
+my $b = $aref->[1];
+my $c = $aref->[2];
 ...
 
-# test_transform <<'...', "Unpack a literal aref";
-# my [$foo, $bar] = [111, 222];
-# +++
-# my $_1 = [111, 222]; my $foo = 111; my $bar = 222;
-# ...
+test <<'...', "Unpack a literal aref";
+my [ $a, $b, $c ] = [111, 222, 333];
++++
+my $___1 = [111, 222, 333];
+my $a = $___1->[0];
+my $b = $___1->[1];
+my $c = $___1->[2];
+...
+
+test <<'...', "Unpack aref into 'our' vars";
+our [ $a, $b, $c ] = $aref;
++++
+our $a = $aref->[0];
+our $b = $aref->[1];
+our $c = $aref->[2];
+...
