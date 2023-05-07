@@ -89,6 +89,10 @@ Here we go...
 
   Define 2 `our` variables and assign the array-ref values in order.
 
+* `local [$foo, $bar] = $array_ref;`
+
+  Define 2 `local` variables and assign the array-ref values in order.
+
 <!---
 * `my {$foo, $bar} = {bar => 111, foo => 222};`
 

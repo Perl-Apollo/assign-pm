@@ -22,3 +22,14 @@ our [$a4, $b4, $c4] = [111, 222];
 is $main::a4, 111, "\$main::a4 == 111";
 is $main::b4, 222, "\$main::b4 == 222";
 ok not(defined($main::c4)), "\$main::c4 is not defined";
+
+our ($a5, $b5, $c5) = (1, 2, 3);
+{
+    local [$a5, $b5, $c5] = [111, 222];
+    is $main::a5, 111, "\$main::a5 == 111";
+    is $main::b5, 222, "\$main::b5 == 222";
+    ok not(defined($main::c5)), "\$main::c5 is not defined";
+}
+is $main::a5, 1, "\$main::a5 == 1";
+is $main::b5, 2, "\$main::b5 == 2";
+is $main::c5, 3, "\$main::c5 == 3";

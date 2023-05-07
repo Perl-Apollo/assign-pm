@@ -59,7 +59,7 @@ sub transform_assignment_statements {
             $n->isa('PPI::Statement::Variable') and
             @{[$n->schildren]} >= 5 and
             $n->schild(0)->isa('PPI::Token::Word') and
-            $n->schild(0)->content =~ /^(my|our)$/ and
+            $n->schild(0)->content =~ /^(my|our|local)$/ and
             $n->schild(1)->isa('PPI::Structure::Constructor') and
             $n->schild(2)->isa('PPI::Token::Operator') and
             $n->schild(2)->content eq '=';
