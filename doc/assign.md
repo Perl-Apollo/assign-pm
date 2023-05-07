@@ -190,8 +190,14 @@ runtime  errors without using `assign.pm`.
 Currently this module is a working prototype that uses Filter::Simple (Perl
 source code filtering) and PPI.pm (to parse and restructure Perl code).
 
+Each destructuring form is removed and replaced with the appropriate Perl code
+to do the intended actions.
+
 When all the syntax forms have been implemented and fully tested and the module
 has become stable, it will be rewritten as an XS module.
+
+Note: Code transformations adjust the line numbers with `#line <num>`
+statements so that warnings and errors report line numbers that make sense.
 
 
 # Prior Art

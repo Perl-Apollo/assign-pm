@@ -7,7 +7,9 @@ use Filter::Simple;
 use PPI;
 use XXX;
 
-our $varid = 1000;
+our $var_prefix = '___';
+our $var_id = 1000;
+our $var_suffix = '';
 
 sub import {
     defined $_[1] and $_[1] eq '0'
@@ -17,6 +19,14 @@ sub import {
 # FILTER_ONLY code_no_comments => \&filter;
 FILTER_ONLY all => \&filter;
 
+sub filter {
+    my ($class) = @_;
+    $_ = $class->new(
+        code => $_,
+        line => ([caller(4)])->[2],
+    )->transform();
+};
+
 sub new {
     my $class = shift;
     my $self = bless {
@@ -24,16 +34,11 @@ sub new {
     }, $class;
     my $code = $self->{code}
         or die "assign->new requires 'code' string";
+    $self->{line} //= 0;
     $self->{doc} = PPI::Document->new(\$code);
+    $self->{doc}->index_locations;
     return $self;
 }
-
-sub filter {
-    my ($class) = @_;
-    $_ = $class->new(
-        code => $_,
-    )->transform();
-};
 
 sub transform {
     my ($self) = @_;
@@ -128,7 +133,7 @@ sub transform_aref {
     if ($rhs =~ /^(\$\w+);/) {
         $from = $1;
     } else {
-        $from = $self->genvar;
+        $from = $self->gen_var;
         push @$code, "my $from = $rhs";
     }
     my $i = 0;
@@ -141,13 +146,16 @@ sub transform_aref {
     return;
 }
 
-sub genvar {
-    $varid++;
-    return "\$___${varid}";
+sub gen_var {
+    $var_id++;
+    return "\$$var_prefix$var_id$var_suffix";
 }
 
 sub replace_statement_node {
     my ($self, $node, $code) = @_;
+    my $line_number = $node->last_token->logical_line_number + $self->{line};
+    $node->insert_after($_->remove)
+        for reverse PPI::Document->new(\"\n#line $line_number")->elements;
     $node->insert_after($_->remove)
         for reverse PPI::Document->new(\$code)->elements;
     $node->remove;

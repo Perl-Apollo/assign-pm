@@ -3,12 +3,17 @@ package
 assign::Test;
 
 use Test::More;
+use Capture::Tiny;
+use XXX;
 
 use base 'Exporter';
 
 our @EXPORT = qw(
     test
-    is ok pass fail
+    is ok pass fail like
+    capture
+    XXX
+    WWW
 );
 
 sub import {
@@ -24,7 +29,8 @@ sub test {
         $ENV{TEST_ONLY} != ++$test_count;
 
     require assign;
-    $assign::varid = 0;
+    $assign::var_prefix = '_';
+    $assign::var_id = 0;
 
     my ($spec, $label) = @_;
 
@@ -36,6 +42,8 @@ sub test {
 
     is $got, $want, $label;
 }
+
+sub capture { goto &Capture::Tiny::capture_merged }
 
 END {
     package main;
