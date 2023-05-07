@@ -1,4 +1,10 @@
 ---
+version: 0.0.3
+date:    Sun May  7 08:25:35 AM CEST 2023
+changes:
+- Refactor code to be more generic
+- Support "our" declarations
+---
 version: 0.0.2
 date:    Sun May  7 12:15:57 AM CEST 2023
 changes:

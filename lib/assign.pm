@@ -1,7 +1,7 @@
 use strict; use warnings;
 package assign;
 
-our $VERSION = '0.0.2';
+our $VERSION = '0.0.3';
 
 use Filter::Simple;
 use PPI;
