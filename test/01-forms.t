@@ -34,3 +34,13 @@ local $a = $aref->[0];
 local $b = $aref->[1];
 local $c = $aref->[2];
 ...
+
+test <<'...', "Unpack aref into 'local' vars";
+my $a; our $b; local $c;
+[ $a, $b, $c ] = $aref;
++++
+my $a; our $b; local $c;
+$a = $aref->[0];
+$b = $aref->[1];
+$c = $aref->[2];
+...

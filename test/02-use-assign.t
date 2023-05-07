@@ -33,3 +33,9 @@ our ($a5, $b5, $c5) = (1, 2, 3);
 is $main::a5, 1, "\$main::a5 == 1";
 is $main::b5, 2, "\$main::b5 == 2";
 is $main::c5, 3, "\$main::c5 == 3";
+
+my $a6; our $b6; my $c6;
+[ $a6, $b6, $c6 ] = $aref1;
+is $a6, 111, "\$a6 == 111";
+is $b6, 222, "\$b6 == 222";
+ok not(defined($c6)), "\$c6 is not defined";

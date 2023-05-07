@@ -40,6 +40,7 @@ sub transform {
 
     # Call the various possible assignment transformations:
     $self->transform_assignment_statements;
+    $self->transform_assignment_statements_no_dec;
     # ... more to come ...
 
     $self->{doc}->serialize;
@@ -50,11 +51,17 @@ sub transform_assignment_statements {
 
     my $doc = $self->{doc};
 
-    $self->transform_assignment_statement($_) for
-    map { $_ ||= []; @$_ }
-    $doc->find(sub {
+    do {
+        my $node = $_;
+        my ($dec, $lhs, $op, @rhs) = $node->schildren;
+        my $rhs = join '', map $_->content, @rhs;
+        $self->transform_assignment_statement(
+            $node, $dec, $lhs, $op, $rhs,
+        );
+    } for map {
+        $_ ||= []; @$_
+    } $doc->find(sub {
         my $n = $_[1];
-        $n->isa('PPI::Statement::Variable');
         return 0 unless
             $n->isa('PPI::Statement::Variable') and
             @{[$n->schildren]} >= 5 and
@@ -66,13 +73,37 @@ sub transform_assignment_statements {
     });
 }
 
-sub transform_assignment_statement {
-    my ($self, $node) = @_;
-    my ($own, $lhs, $op, @rhs) = $node->schildren;
+sub transform_assignment_statements_no_dec {
+    my ($self) = @_;
 
-    $self->{own} = $own->{content};
+    my $doc = $self->{doc};
+
+    do {
+        my $node = $_;
+        my $dec = '';
+        my ($lhs, $op, @rhs) = $node->schildren;
+        my $rhs = join '', map $_->content, @rhs;
+        $self->transform_assignment_statement(
+            $node, $dec, $lhs, $op, $rhs,
+        );
+    } for map {
+        $_ ||= []; @$_
+    } $doc->find(sub {
+        my $n = $_[1];
+        return 0 unless
+            ref($n) eq 'PPI::Statement' and
+            @{[$n->schildren]} >= 4 and
+            $n->schild(0)->isa('PPI::Structure::Constructor') and
+            $n->schild(1)->isa('PPI::Token::Operator') and
+            $n->schild(1)->content eq '=';
+    });
+}
+
+sub transform_assignment_statement {
+    my ($self, $node, $dec, $lhs, $op, $rhs) = @_;
+
+    $self->{dec} = $dec ? $dec->{content} . ' ' : '';
     $self->{op} = $op->{content};
-    my $rhs = join '', map $_->content, @rhs;
 
     $self->{code} = [];
     if ($lhs->start->content eq '[') {
@@ -92,7 +123,7 @@ sub transform_assignment_statement {
 
 sub transform_aref {
     my ($self, $lhs, $rhs) = @_;
-    my ($code, $own, $op) = @$self{qw<code own op>};
+    my ($code, $dec, $op) = @$self{qw<code dec op>};
     my $from;
     if ($rhs =~ /^(\$\w+);/) {
         $from = $1;
@@ -103,7 +134,7 @@ sub transform_aref {
     my $i = 0;
     do {
         my $var = $_->content;
-        push @$code, "$own $var $op $from\->[$i];";
+        push @$code, "$dec$var $op $from\->[$i];";
         $i++;
     } for map { $_ ||= []; @$_ }
     $lhs->find('PPI::Token::Symbol');

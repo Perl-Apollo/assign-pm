@@ -87,11 +87,15 @@ Here we go...
 
 * `our [$foo, $bar] = $array_ref;`
 
-  Define 2 `our` variables and assign the array-ref values in order.
+  Define `our` variables and assign the array-ref values.
 
 * `local [$foo, $bar] = $array_ref;`
 
-  Define 2 `local` variables and assign the array-ref values in order.
+  Define `local` variables and assign the array-ref values.
+
+* `my $foo; our $bar; [$foo, $bar] = $array_ref;`
+
+   Assign the array-ref values to 2 pre-defined variables.
 
 <!---
 * `my {$foo, $bar} = {bar => 111, foo => 222};`
