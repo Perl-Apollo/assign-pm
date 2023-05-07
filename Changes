@@ -1,4 +1,9 @@
 ---
+version: 0.0.6
+date:    Sun May  7 11:50:34 PM CEST 2023
+changes:
+- Implement line renumbering for code transformations
+---
 version: 0.0.5
 date:    Sun May  7 12:29:09 PM CEST 2023
 changes:
