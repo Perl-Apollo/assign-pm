@@ -2,6 +2,7 @@ use strict; use warnings;
 package
 assign::Test;
 
+use assign::0();
 use Test::More;
 use Capture::Tiny;
 use XXX;
@@ -28,7 +29,7 @@ sub test {
         defined $ENV{TEST_ONLY} and
         $ENV{TEST_ONLY} != ++$test_count;
 
-    require assign;
+    $assign::assign_class = 'assign::0';
     $assign::var_prefix = '_';
     $assign::var_id = 0;
 
