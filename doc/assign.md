@@ -97,12 +97,10 @@ Here we go...
 
    Assign the array-ref values to 2 pre-defined variables.
 
-<!---
 * `my {$foo, $bar} = {bar => 111, foo => 222};`
 
   Define 2 `my` variables and use the variable name as the key to extract from
   the hash-ref on the RHS.
---->
 
 
 ## To Do
@@ -115,14 +113,11 @@ allow a structure to be assigned to.
 Here's the current list of things intended to be added soon:
 
 ```
-my ( $x1, $x2 );
-[ $x1, $x2 ] = $d;                  # Unpack into pre-defined vars
-
+my [ _, $x2, _, $x4 ] = $d;         # Use _ ignore an array element
+my [ $x1, $_ ] = $d;                # $_ actually sets $_
 my [ $x1, $x2=42 ] = $d;            # Set a default variable
 my [ $x1, @xs ] = $d;               # Set remaining into an array
 my [ $x1, @xs, $x2 ] $d;            # Set all but first and last into array
-my [ _, $x2, _, $x4 ] = $d;         # Use _ ignore an array element
-my [ $x1, $_ ] = $d;                # $_ actually sets $_
 my [ $first, [], $last ] = $d;      # Ignore middle
 my [ 25, $x26, $x27 ] = $d;         # Use a number to ignore muliple
 my [ $x1, $x2, -25 ] = $d;          # Take -27 and -26

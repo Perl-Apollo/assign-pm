@@ -49,3 +49,22 @@ $b = $aref->[1];
 $c = $aref->[2];
 #line 2
 ...
+
+test <<'...', "Unpack href into 'my' vars";
+my { $a, $b, $c } = $href;
++++
+my $a = $href->{a};
+my $b = $href->{b};
+my $c = $href->{c};
+#line 1
+...
+
+test <<'...', "Unpack literal href into 'my' vars";
+my { $a, $b, $c } = {a => 111, b => 222, c => 333};
++++
+my $_1 = {a => 111, b => 222, c => 333};
+my $a = $_1->{a};
+my $b = $_1->{b};
+my $c = $_1->{c};
+#line 1
+...

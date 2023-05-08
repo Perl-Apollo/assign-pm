@@ -3,7 +3,7 @@ use assign::Test;
 use assign -0;
 
 my $aref1 = [111, 222];
-my $href1 = {bar => 111, foo => 222};
+my $href1 = {bar => 222, foo => 111};
 
 my [$a1, $b1] = $aref1;
 is $a1 + $b1, 333, "It works";
@@ -39,3 +39,8 @@ my $a6; our $b6; my $c6;
 is $a6, 111, "\$a6 == 111";
 is $b6, 222, "\$b6 == 222";
 ok not(defined($c6)), "\$c6 is not defined";
+
+my {$foo, $bar, $baz} = $href1;
+is $foo, 111, "\$foo == 111";
+is $bar, 222, "\$bar == 222";
+ok not(defined($baz)), "\$baz is not defined";
