@@ -3,6 +3,11 @@ package assign;
 
 our $VERSION = '0.0.7';
 
+# TODO:
+# * Move v0 code to assign::0.pm
+# * Change `use assign -0` to `use assign::0`
+# * `use assign::0 -debug`
+
 use Filter::Simple;
 use PPI;
 use XXX;
@@ -149,11 +154,27 @@ sub transform_aref {
     }
     my $i = 0;
     do {
+        my $decl = $dec;
         my $var = $_->content;
-        push @$code, "$dec$var $op $from\->[$i];";
+        if ($var eq '_') {
+            $i++;
+            next;
+        }
+        if ($var =~ /^[1-9][0-9]*$/) {
+            $i += $var;
+            next;
+        }
+        if ($var eq '$_') {
+            $decl = '';
+        }
+        push @$code, "$decl$var $op $from\->[$i];";
         $i++;
     } for map { $_ ||= []; @$_ }
-    $lhs->find('PPI::Token::Symbol');
+    $lhs->find(sub {
+        my $n = $_[1];
+        $n->isa('PPI::Token::Symbol') or
+        $n->isa('PPI::Token::Number')
+    });
     return;
 }
 

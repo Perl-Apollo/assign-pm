@@ -9,7 +9,7 @@ Destructuring Assignment Syntax in Perl
 This code:
 
 ```
-use assign -0;
+use assign::0;
 
 my {$foo, bar => [ $first, @rest, $last ]} = $self->data;
 ```
@@ -51,8 +51,32 @@ The hope is that this may one day become a pragma module or possibly even part
 of the Perl language's syntax.
 
 To preserve backwards compatability for early adopters, the module currently
-requires you to `use assign -0;`.
+requires you to `use assign::0;`.
 When the module becomes stable and vetted, it will become simply `use assign;`.
+
+
+# Usage
+
+Simply add a `use assign::0;` line to your program, and then you can use any of
+the assignment forms described below.
+You must `use` the module _before_ the first line where you use one of the
+assignment forms.
+
+If you need to turn off `assign` after turning it on for some reason, you can
+use the line: `no assign`.
+
+## Debugging
+
+To see how the `assign` module turns the new style assignment forms into plain
+old Perl code in you program, use `use assign::0 --debug` and run the program.
+This will cause your program to print out the transformed source code and exit.
+Your program will not run.
+
+Another way to do this is with a Perl one-liner like:
+
+```
+perl -e 'require assign; assign->debug("your-program.pl")'
+```
 
 
 # Destructuring Forms
@@ -63,6 +87,9 @@ All the forms below have been implemented and should work as described for this
 version of the module.
 
 Here we go...
+
+
+## Basic Forms
 
 * `my [$foo, $bar] = $array_ref;`
 
@@ -103,6 +130,22 @@ Here we go...
   the hash-ref on the RHS.
 
 
+## Extended Array Ref Forms
+
+* `my [ $foo, _, _, $bar ] = $array_ref;`
+
+  You can skip array values with the `_` symbol.
+
+* `my [ $foo, $_, $bar ] = $array_ref;`
+
+  Unpack into global `$_`, not a my variable.
+  The `$foo` and `$bar` here are still `my` lexical vars.
+
+* `my [ 7, $foo, 42, $bar ] = $array_ref;`
+
+  You can skip any number of array values by using a positive integer.
+
+
 ## To Do
 
 There are many more forms that are intended to work, and many more cases we
@@ -113,13 +156,11 @@ allow a structure to be assigned to.
 Here's the current list of things intended to be added soon:
 
 ```
-my [ _, $x2, _, $x4 ] = $d;         # Use _ ignore an array element
 my [ $x1, $_ ] = $d;                # $_ actually sets $_
 my [ $x1, $x2=42 ] = $d;            # Set a default variable
 my [ $x1, @xs ] = $d;               # Set remaining into an array
 my [ $x1, @xs, $x2 ] $d;            # Set all but first and last into array
 my [ $first, [], $last ] = $d;      # Ignore middle
-my [ 25, $x26, $x27 ] = $d;         # Use a number to ignore muliple
 my [ $x1, $x2, -25 ] = $d;          # Take -27 and -26
 
 my [ @a, @b, @c ] = $d;             # Evenly distribute values over multiple arrays
