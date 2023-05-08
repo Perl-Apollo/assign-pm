@@ -68,15 +68,24 @@ use the line: `no assign`.
 ## Debugging
 
 To see how the `assign` module turns the new style assignment forms into plain
-old Perl code in you program, use `use assign::0 --debug` and run the program.
-This will cause your program to print out the transformed source code and exit.
-Your program will not run.
-
-Another way to do this is with a Perl one-liner like:
+old Perl code in you program, you can use the `assign::0->debug()` method.
 
 ```
-perl -e 'require assign; assign->debug("your-program.pl")'
+require assign::0;
+print assign::0->debug(<perl-file-name>);
+print assign::0->debug(<perl-code-string-as-scalar-ref>);
 ```
+
+This will perform the `assign` transformations on the Perl code and print the
+result.
+
+You can do that as a perl one-liner like so:
+
+```
+perl -e 'require assign::0; print assign::0->debug("program.pl")'
+```
+
+Remember to use `require assign::0;`, not `use assign::0;`.
 
 
 # Destructuring Forms

@@ -9,7 +9,10 @@ use XXX;
 
 use base 'Exporter';
 
+our $t = -d 't' ? 't' : 'test';
+
 our @EXPORT = qw(
+    $t
     test
     is ok pass fail like
     capture
