@@ -26,3 +26,11 @@ my $a = $aref->[7];
 my $b = $aref->[50];
 #line 1
 ...
+
+# test <<'...', "Unpack unref with defaults";
+# my [ $a, $b=(42 + 1) ] = $aref;
+# +++
+# my $a = $aref->[0];
+# my $b = $aref->[1] // 42;
+# #line 1
+# ...

@@ -4,14 +4,15 @@ package assign::0;
 our $VERSION = '0.0.7';
 
 use assign();
+use assign::Array;
+use assign::Hash;
+
 use Filter::Simple;
 use PPI;
 use XXX;
 
 sub import {
     my $pkg = $assign::assign_class = shift;
-#     if (grep {$_ eq '-debug'} @_) {
-#         $pkg->debug
 }
 
 # FILTER_ONLY code_no_comments => \&filter;
@@ -65,10 +66,10 @@ sub transform_assignment_statements_with_decl {
     my ($self) = @_;
 
     for my $node ($self->find_assignment_statements_with_decl) {
-        my ($dec, $lhs, $op, @rhs) = $node->schildren;
+        my ($decl, $lhs, $oper, @rhs) = $node->schildren;
         my $rhs = join '', map $_->content, @rhs;
         $self->transform_assignment_statement(
-            $node, $dec, $lhs, $op, $rhs,
+            $node, $decl, $lhs, $oper, $rhs,
         );
     }
 }
@@ -77,11 +78,11 @@ sub transform_assignment_statements_no_decl {
     my ($self) = @_;
 
     for my $node ($self->find_assignment_statements_no_decl) {
-        my $dec = '';
-        my ($lhs, $op, @rhs) = $node->schildren;
+        my $decl = '';
+        my ($lhs, $oper, @rhs) = $node->schildren;
         my $rhs = join '', map $_->content, @rhs;
         $self->transform_assignment_statement(
-            $node, $dec, $lhs, $op, $rhs,
+            $node, $decl, $lhs, $oper, $rhs,
         );
     }
 }
@@ -126,79 +127,31 @@ sub find_assignment_statements_no_decl {
 }
 
 sub transform_assignment_statement {
-    my ($self, $node, $dec, $lhs, $op, $rhs) = @_;
+    my ($self, $node, $decl, $lhs, $oper, $rhs) = @_;
 
-    $self->{dec} = $dec ? $dec->{content} . ' ' : '';
-    $self->{op} = $op->{content};
+    $decl = $decl ? $decl->{content} . ' ' : '';
+    $oper = $oper->{content};
 
-    $self->{code} = [];
-    if ($lhs->start->content eq '[') {
-        $self->transform_aref($lhs, $rhs);
-    } elsif ($lhs->start->content eq '{') {
-        $self->transform_href($lhs, $rhs);
-    } else {
+    my $class =
+        $lhs->start->content eq '[' ? 'assign::Array' :
+        $lhs->start->content eq '{' ? 'assign::Hash' :
         ZZZ $node, "Unsupported statement";
+
+    my $from;
+    my $init = [];
+    if ($rhs =~ /^(\$\w+);/) {
+        $from = $1;
+    } else {
+        $from = $self->gen_var;
+        push @$init, "my $from = $rhs";
     }
 
-    my $code = join "\n", @{$self->{code}};
+    my $code = $class->new(
+        node => $lhs,
+    )->parse->gen_code($decl, $oper, $from, $init);
 
     $self->replace_statement_node($node, $code);
 
-    return;
-}
-
-sub transform_aref {
-    my ($self, $lhs, $rhs) = @_;
-    my ($code, $dec, $op) = @$self{qw<code dec op>};
-    my $from;
-    if ($rhs =~ /^(\$\w+);/) {
-        $from = $1;
-    } else {
-        $from = $self->gen_var;
-        push @$code, "my $from = $rhs";
-    }
-    my $i = 0;
-    do {
-        my $decl = $dec;
-        my $var = $_->content;
-        if ($var eq '_') {
-            $i++;
-            next;
-        }
-        if ($var =~ /^[1-9][0-9]*$/) {
-            $i += $var;
-            next;
-        }
-        if ($var eq '$_') {
-            $decl = '';
-        }
-        push @$code, "$decl$var $op $from\->[$i];";
-        $i++;
-    } for map { $_ ||= []; @$_ }
-    $lhs->find(sub {
-        my $n = $_[1];
-        $n->isa('PPI::Token::Symbol') or
-        $n->isa('PPI::Token::Number')
-    });
-    return;
-}
-
-sub transform_href {
-    my ($self, $lhs, $rhs) = @_;
-    my ($code, $dec, $op) = @$self{qw<code dec op>};
-    my $from;
-    if ($rhs =~ /^(\$\w+);/) {
-        $from = $1;
-    } else {
-        $from = $self->gen_var;
-        push @$code, "my $from = $rhs";
-    }
-    do {
-        my $var = $_->content;
-        (my $key = $var) =~ s/^\$//;
-        push @$code, "$dec$var $op $from\->{$key};";
-    } for map { $_ ||= []; @$_ }
-    $lhs->find('PPI::Token::Symbol');
     return;
 }
 

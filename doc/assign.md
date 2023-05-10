@@ -20,9 +20,9 @@ works the same as this code:
 my $_temp1 = $self->data;
 my $foo = $_temp1->{foo};
 my $_temp2 = $_temp1->{bar};
-my $first = shift @$temp2;
-my $last = pop @$temp2;
-my @rest = @$temp2;
+my $first = $_temp2->[0];
+my @rest = @$_temp2[1..(@$_temp2-2)];
+my $last = $_temp2->[@$_temp2-1] if @$_temp2 > 1;
 ```
 
 
@@ -64,6 +64,7 @@ assignment forms.
 
 If you need to turn off `assign` after turning it on for some reason, you can
 use the line: `no assign`.
+
 
 ## Debugging
 
@@ -165,16 +166,18 @@ allow a structure to be assigned to.
 Here's the current list of things intended to be added soon:
 
 ```
-my [ $x1, $_ ] = $d;                # $_ actually sets $_
 my [ $x1, $x2=42 ] = $d;            # Set a default variable
 my [ $x1, @xs ] = $d;               # Set remaining into an array
 my [ $x1, @xs, $x2 ] $d;            # Set all but first and last into array
 my [ $first, [], $last ] = $d;      # Ignore middle
 my [ $x1, $x2, -25 ] = $d;          # Take -27 and -26
 
-my [ @a, @b, @c ] = $d;             # Evenly distribute values over multiple arrays
-my [ @a, @_, @_ ] = $d;             # Take every third element (0, 3, 6, ...)
-my [ @a, @19 ] = $d;                # Take every 19th element
+my [ @a => @b => @c ] = $d;         # Evenly distribute values over multiple arrays
+my [ @a => @ => @ ] = $d;           # Take every third element (0, 3, 6, ...)
+my [ @a => @19 ] = $d;              # Take every 19th element
+
+my [ @a, @b, @c ] = $d;             # Split into thirds
+my [ @a, @, @ ] = $d;               # Get first third
 
 # Hash destructuring:
 my { $k1, $k2 } = $d;               # Unpack a hash ref
