@@ -1,7 +1,7 @@
 assign
 ======
 
-Destructuring Assignment Syntax in Perl
+Destructuring Assignment Syntax for Perl
 
 
 # Synopsis

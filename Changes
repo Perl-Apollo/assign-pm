@@ -1,4 +1,9 @@
 ---
+version: 0.0.8
+date:    Thu May 11 03:11:13 PM PDT 2023
+changes:
+- Add assign::Array and assign::Hash container classes
+---
 version: 0.0.7
 date:    Mon May  8 07:23:08 AM CEST 2023
 changes:

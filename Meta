@@ -1,8 +1,8 @@
 =meta: 0.0.2
 
 name: assign
-version: 0.0.7
-abstract: Enable Destructuring Assignment Syntax in Perl
+version: 0.0.8
+abstract: Destructuring Assignment Syntax for Perl
 homepage: https://metacpan.org/release/assign
 language: perl
 license: perl
