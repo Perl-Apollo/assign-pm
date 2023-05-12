@@ -3,7 +3,7 @@ package assign;
 
 use XXX;
 
-our $VERSION = '0.0.9';
+our $VERSION = '0.0.10';
 
 our $assign_class;
 

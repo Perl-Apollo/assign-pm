@@ -1,4 +1,9 @@
 ---
+version: 0.0.10
+date:    Fri May 12 07:30:34 AM PDT 2023
+changes:
+- Support default values for array vars
+---
 version: 0.0.9
 date:    Fri May 12 06:50:22 AM PDT 2023
 changes:
