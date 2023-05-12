@@ -1,6 +1,8 @@
 use strict; use warnings;
 package assign;
 
+use XXX;
+
 our $VERSION = '0.0.8';
 
 our $assign_class;

@@ -29,8 +29,8 @@ sub import {
 my $test_count = 0;
 sub test {
     return if
-        defined $ENV{TEST_ONLY} and
-        $ENV{TEST_ONLY} != ++$test_count;
+        defined $ENV{ONLY} and
+        $ENV{ONLY} != ++$test_count;
 
     $assign::assign_class = 'assign::0';
     $assign::var_prefix = '_';

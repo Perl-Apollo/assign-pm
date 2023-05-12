@@ -1,6 +1,8 @@
 use strict; use warnings;
 package assign::Struct;
 
+use assign::Types;
+
 use XXX;
 
 sub new {
@@ -57,7 +59,7 @@ sub parse_comma {
             return 1;
         }
         else {
-            XXX $tok, "comma expected";
+            XXX $tok, $in, "comma expected";
         }
     }
     return 0;

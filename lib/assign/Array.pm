@@ -19,25 +19,25 @@ sub parse_elem {
         if ($type eq 'Symbol') {
             my $str = $tok->content;
             if ($str =~ /^\$\w+$/) {
-                push @$elems, bless(\$str, 'var');
+                push @$elems, var->new($str);
                 return 1;
             }
         }
         if ($type eq 'Number') {
             my $str = $tok->content;
             if ($str =~ /^[1-9][0-9]*$/) {
-                push @$elems, bless(\$str, 'skip_num');
+                push @$elems, skip_num->new($str);
                 return 1;
             }
         }
         if ($type eq 'Magic') {
             my $str = $tok->content;
             if ($str eq '_') {
-                push @$elems, bless(\$str, 'skip');
+                push @$elems, skip->new;
                 return 1;
             }
             if ($str eq '$_') {
-                push @$elems, bless(\$str, 'var');
+                push @$elems, var->new($str);
                 return 1;
             }
         }
@@ -61,13 +61,14 @@ sub gen_code {
             next;
         }
         if ($type eq 'skip_num') {
-            $i += $$elem;
+            $i += $elem->val;
             next;
         }
-        if ($$elem eq '$_') {
+        if ($elem->val eq '$_') {
             $dec = '';
         }
-        push @$code, "$dec$$elem $oper $from\->[$i];";
+        my $var = $elem->val;
+        push @$code, "$dec$var $oper $from\->[$i];";
         $i++;
     }
 
