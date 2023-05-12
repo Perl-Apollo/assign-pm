@@ -65,4 +65,25 @@ sub parse_comma {
     return 0;
 }
 
+sub get_var {
+    my ($self, $var) = @_;
+    my $def;
+    my $in = $self->{in};
+    if (@$in > 1 and
+        ref($in->[0]) eq 'PPI::Token::Operator' and
+        $in->[0]->content eq '='
+    ) {
+        shift @$in;
+        my $d = shift @$in;
+        XXX $d, "Invalid token for variable default"
+            unless ref($d) =~
+                /^PPI::Token::(Number|Symbol|Quote::(Single|Double))$/;
+        $def = $d->content;
+        XXX $d, "Invalid token for variable default"
+            if ref($d) eq 'PPI::Token::Symbol' and
+                $def !~ /^\$\w+$/;
+    }
+    var->new($var, $def);
+}
+
 1;

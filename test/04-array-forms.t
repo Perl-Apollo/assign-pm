@@ -27,10 +27,13 @@ my $b = $aref->[50];
 #line 1
 ...
 
-# test <<'...', "Unpack unref with defaults";
-# my [ $a, $b=42 ] = $aref;
-# +++
-# my $a = $aref->[0];
-# my $b = $aref->[1] // 42;
-# #line 1
-# ...
+test <<'...', "Unpack unref with defaults";
+my [ $a, $b=42, $c="hi\nthere", $d=$a, $e='ok computer' ] = $aref;
++++
+my $a = $aref->[0];
+my $b = $aref->[1] // 42;
+my $c = $aref->[2] // "hi\nthere";
+my $d = $aref->[3] // $a;
+my $e = $aref->[4] // 'ok computer';
+#line 1
+...

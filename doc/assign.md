@@ -155,6 +155,12 @@ Here we go...
 
   You can skip any number of array values by using a positive integer.
 
+* `my [ $a, $b=42, $c="1\n2", $d=$a ] = $array_ref;`
+
+  You can define default values for variables.
+  Currently the default must be a single token (string, number, variable).
+  Also there must not be whitespace on either side of the `=`.
+
 
 ## To Do
 
@@ -166,7 +172,6 @@ allow a structure to be assigned to.
 Here's the current list of things intended to be added soon:
 
 ```
-my [ $x1, $x2=42 ] = $d;            # Set a default variable
 my [ $x1, @xs ] = $d;               # Set remaining into an array
 my [ $x1, @xs, $x2 ] $d;            # Set all but first and last into array
 my [ $first, [], $last ] = $d;      # Ignore middle

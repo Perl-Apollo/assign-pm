@@ -19,7 +19,7 @@ sub parse_elem {
         if ($type eq 'Symbol') {
             my $str = $tok->content;
             if ($str =~ /^\$\w+$/) {
-                push @$elems, var->new($str);
+                push @$elems, $self->get_var($str);
                 return 1;
             }
         }
@@ -68,7 +68,9 @@ sub gen_code {
             $dec = '';
         }
         my $var = $elem->val;
-        push @$code, "$dec$var $oper $from\->[$i];";
+        my $def = $elem->{def} // '';
+        $def &&= " // $def";
+        push @$code, "$dec$var $oper $from\->[$i]$def;";
         $i++;
     }
 
