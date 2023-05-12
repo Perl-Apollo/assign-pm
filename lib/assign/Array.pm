@@ -13,24 +13,23 @@ sub parse_elem {
     while (@$in) {
         my $tok = shift(@$in);
         my $type = ref($tok);
-        $type =~ s/^PPI::Token::// or XXX $type;
-        next if $type eq 'Whitespace';
+        next if $type eq 'PPI::Token::Whitespace';
 
-        if ($type eq 'Symbol') {
+        if ($type eq 'PPI::Token::Symbol') {
             my $str = $tok->content;
             if ($str =~ /^\$\w+$/) {
                 push @$elems, $self->get_var($str);
                 return 1;
             }
         }
-        if ($type eq 'Number') {
+        if ($type eq 'PPI::Token::Number') {
             my $str = $tok->content;
             if ($str =~ /^[1-9][0-9]*$/) {
                 push @$elems, skip_num->new($str);
                 return 1;
             }
         }
-        if ($type eq 'Magic') {
+        if ($type eq 'PPI::Token::Magic') {
             my $str = $tok->content;
             if ($str eq '_') {
                 push @$elems, skip->new;

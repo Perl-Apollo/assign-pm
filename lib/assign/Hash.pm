@@ -13,10 +13,9 @@ sub parse_elem {
     while (@$in) {
         my $tok = shift(@$in);
         my $type = ref($tok);
-        $type =~ s/^PPI::Token::// or XXX $type;
-        next if $type eq 'Whitespace';
+        next if $type eq 'PPI::Token::Whitespace';
 
-        if ($type eq 'Symbol') {
+        if ($type eq 'PPI::Token::Symbol') {
             my $str = $tok->content;
             if ($str =~ /^\$\w+$/) {
                 push @$elems, var->new($str);
