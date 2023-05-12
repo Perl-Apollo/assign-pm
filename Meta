@@ -25,7 +25,7 @@ requires:
   Filter::Simple: 0.95
   PPI: 1.276
   XXX: 0.38
-  YAML::PP: 0.35
+  YAML::PP: 0.036
 
 =zild:
   no-about: true
