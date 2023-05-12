@@ -1,4 +1,10 @@
 ---
+version: 0.0.9
+date:    Fri May 12 06:50:22 AM PDT 2023
+changes:
+- Define classes for internal objects
+- Fix YAML::PP version requirement
+---
 version: 0.0.8
 date:    Thu May 11 03:11:13 PM PDT 2023
 changes:
