@@ -173,6 +173,8 @@ Here's the current list of things intended to be added soon:
 
 ```
 my [ $x1, @xs ] = $d;               # Set remaining into an array
+my [ $x1, $xs* ] = $d;
+my [ $x1, $xs(25), @xs(20) ] = $d;
 my [ $x1, @xs, $x2 ] $d;            # Set all but first and last into array
 my [ $first, [], $last ] = $d;      # Ignore middle
 my [ $x1, $x2, -25 ] = $d;          # Take -27 and -26

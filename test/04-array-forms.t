@@ -37,3 +37,16 @@ my $d = $aref->[3] // $a;
 my $e = $aref->[4] // 'ok computer';
 #line 1
 ...
+
+test <<'...', "Inside a subroutine";
+sub foo {
+    my [$a, $b] = @_;
+}
++++
+sub foo {
+    my $_1 = @_;
+my $a = $_1->[0];
+my $b = $_1->[1];
+#line 2
+}
+...
