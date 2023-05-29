@@ -22,7 +22,7 @@ sub sigil {
 
 sub is_slurpy {
     my ($self) = @_;
-    $self->{var} =~ /^\@\w+$/ || $self->{attributes} eq '*';
+    $self->sigil eq '@' || $self->{attributes} eq '*';
 }
 
 #------------------------------------------------------------------------------
