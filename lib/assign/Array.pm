@@ -17,12 +17,21 @@ sub parse_elem {
 
         if ($type eq 'PPI::Token::Symbol') {
             my $str = $tok->content;
-            if ($str =~ /^\$\w+$/) {
-                push @$elems, $self->get_var($str);
-                return 1;
-            }
-            if ($str =~ /^\@\w+$/) {
-                push @$elems, $self->get_var($str);
+            if ($str =~ /^[\$\@]\w+$/) {
+                my $elem = $self->get_var($str);
+
+                # Handle cases such as `$a:*` when reaching `:`
+                my $tok_next1 = $tok->next_sibling;
+                if (ref($tok_next1) eq 'PPI::Token::Operator' && $tok_next1->content eq ':') {
+                    my $tok_next2 = $tok_next1->next_sibling;
+                    if (ref($tok_next2) eq 'PPI::Token::Operator' && $tok_next2->content eq '*') {
+                        $elem->{attributes} = '*';
+                        shift(@$in);
+                        shift(@$in);
+                    }
+                }
+
+                push @$elems, $elem;
                 return 1;
             }
         }
@@ -75,8 +84,13 @@ sub gen_code {
         my $def = $elem->{def} // '';
         $def &&= " // $def";
 
-        if ($elem->val =~ /^\@/) {
-            push @$code, "$dec$var $oper \@$from\[$i..\@$from-1\]$def;";
+        if ($elem->is_slurpy) {
+            if ($elem->sigil eq '@') {
+                push @$code, "$dec$var $oper \@$from\[$i..\@$from-1\]$def;";
+            }
+            elsif ($elem->sigil eq '$') {
+                push @$code, "$dec$var $oper \[\@$from\[$i..\@$from-1\]\]$def;";
+            }
         }
         else {
             push @$code, "$dec$var $oper $from\->[$i]$def;";

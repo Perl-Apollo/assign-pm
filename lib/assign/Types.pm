@@ -10,12 +10,20 @@ sub new {
     bless {
         var => $var,
         def => $def,
+        attributes => '',
     }, $class;
 }
 
 sub val { $_[0]->{var} }
 
+sub sigil {
+    substr $_[0]->{var}, 0, 1
+}
 
+sub is_slurpy {
+    my ($self) = @_;
+    $self->{var} =~ /^\@\w+$/ || $self->{attributes} eq '*';
+}
 
 #------------------------------------------------------------------------------
 package skip;
