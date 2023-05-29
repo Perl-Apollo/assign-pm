@@ -2,6 +2,10 @@ use strict; use warnings;
 package
 assign::Test;
 
+BEGIN {
+    # yath needs this for some reason.
+    $ENV{PERL5LIB} = 'lib';
+}
 use assign::0();
 use Test::More;
 use Capture::Tiny;
