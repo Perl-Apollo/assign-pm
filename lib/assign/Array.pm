@@ -21,6 +21,10 @@ sub parse_elem {
                 push @$elems, $self->get_var($str);
                 return 1;
             }
+            if ($str =~ /^\@\w+$/) {
+                push @$elems, $self->get_var($str);
+                return 1;
+            }
         }
         if ($type eq 'PPI::Token::Number') {
             my $str = $tok->content;
@@ -66,10 +70,19 @@ sub gen_code {
         if ($elem->val eq '$_') {
             $dec = '';
         }
+
         my $var = $elem->val;
         my $def = $elem->{def} // '';
         $def &&= " // $def";
-        push @$code, "$dec$var $oper $from\->[$i]$def;";
+
+        if ($elem->val =~ /^\@/) {
+            push @$code, "$dec$var $oper \@$from\[$i..\@$from-1\]$def;";
+        }
+        else {
+            push @$code, "$dec$var $oper $from\->[$i]$def;";
+        }
+
+
         $i++;
     }
 

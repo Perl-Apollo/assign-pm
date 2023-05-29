@@ -57,10 +57,11 @@ sub foo {
 }
 +++
 sub foo {
-my $a = $aref->[0];
+    my $a = $aref->[0];
 my $b = $aref->[1];
 my @c = @$aref[2..@$aref-1];
 #line 2
+}
 ...
 
 test <<'...', "Glob rest into an array ref";
