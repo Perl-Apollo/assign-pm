@@ -17,11 +17,28 @@ sub parse_elem {
 
         if ($type eq 'PPI::Token::Symbol') {
             my $str = $tok->content;
-            if ($str =~ /^\$\w+$/) {
-                push @$elems, $self->get_var($str);
+            if ($str =~ /^[\$\@]\w+$/) {
+                my $elem = $self->get_var($str);
+                push @$elems, $elem;
                 return 1;
             }
         }
+
+        # Parse @$a in the following if-statement.
+        if ($type eq 'PPI::Token::Cast') {
+            $tok->content eq '@' or
+                XXX $tok, "unexpected token";
+            $tok = shift(@$in);
+            $type = ref($tok);
+            my $str = $tok->content;
+            $type eq 'PPI::Token::Symbol' and $str =~ /^\$\w+$/ or
+                XXX $tok, "unexpected token";
+            my $elem = $self->get_var($str);
+            $elem->{cast} = 1;
+            push @$elems, $elem;
+            return 1;
+        }
+
         if ($type eq 'PPI::Token::Number') {
             my $str = $tok->content;
             if ($str =~ /^[1-9][0-9]*$/) {
@@ -66,10 +83,18 @@ sub gen_code {
         if ($elem->val eq '$_') {
             $dec = '';
         }
+
         my $var = $elem->val;
         my $def = $elem->{def} // '';
         $def &&= " // $def";
-        push @$code, "$dec$var $oper $from\->[$i]$def;";
+
+        push @$code,
+            ($elem->sigil eq '@')
+                ? "$dec$var $oper \@$from\[$i..\@$from-1\]$def;" :
+            ($elem->{cast})
+                ? "$dec$var $oper \[\@$from\[$i..\@$from-1\]\]$def;" :
+            "$dec$var $oper $from\->[$i]$def;";
+
         $i++;
     }
 
