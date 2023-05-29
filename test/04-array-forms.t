@@ -50,3 +50,27 @@ my $b = $_1->[1];
 #line 2
 }
 ...
+
+test <<'...', "Glob rest into array";
+sub foo {
+    my [$a, $b, @c] = $aref;
+}
++++
+sub foo {
+my $a = $aref->[0];
+my $b = $aref->[1];
+my @c = @$aref[2..@$aref-1];
+#line 2
+...
+
+test <<'...', "Glob rest into an array ref";
+sub foo {
+    my [$a, $b, $c:*] = $aref;
+}
++++
+sub foo {
+my $a = $aref->[0];
+my $b = $aref->[1];
+my $c = [@$aref[2..@$aref-1]];
+#line 2
+...
