@@ -20,7 +20,7 @@ sub parse_elem {
             if ($str =~ /^[\$\@]\w+$/) {
                 my $elem = $self->get_var($str);
 
-                # Handle cases such as `$a:*` when reaching `:`
+                # Parse attributes ($a:*) in the following paragraph.
                 my $tok_next1 = $tok->next_sibling;
                 if (ref($tok_next1) eq 'PPI::Token::Operator' && $tok_next1->content eq ':') {
                     my $tok_next2 = $tok_next1->next_sibling;
@@ -36,6 +36,7 @@ sub parse_elem {
             }
         }
 
+        # Parse @$a in the following if-statement.
         if ($type eq 'PPI::Token::Cast') {
             if ($tok->content eq '@') {
                 $tok = shift(@$in);
