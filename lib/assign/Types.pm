@@ -11,6 +11,7 @@ sub new {
         var => $var,
         def => $def,
         attributes => '',
+        cast => '',
     }, $class;
 }
 
@@ -22,7 +23,7 @@ sub sigil {
 
 sub is_slurpy {
     my ($self) = @_;
-    $self->sigil eq '@' || $self->{attributes} eq '*';
+    $self->sigil eq '@' || $self->{cast} eq '@' || $self->{attributes} eq '*';
 }
 
 #------------------------------------------------------------------------------

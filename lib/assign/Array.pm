@@ -35,6 +35,25 @@ sub parse_elem {
                 return 1;
             }
         }
+
+        if ($type eq 'PPI::Token::Cast') {
+            if ($tok->content eq '@') {
+                $tok = shift(@$in);
+                $type = ref($tok);
+                my $str = $tok->content;
+                if ($type eq 'PPI::Token::Symbol' && $str =~ /^\$\w+$/) {
+                    my $elem = $self->get_var($str);
+                    $elem->{cast} = '@';
+                    push @$elems, $elem;
+                    return 1;
+                } else {
+                    XXX $tok, "unexpected token";
+                }
+            } else {
+                XXX $tok, "unexpected token";
+            }
+        }
+
         if ($type eq 'PPI::Token::Number') {
             my $str = $tok->content;
             if ($str =~ /^[1-9][0-9]*$/) {
