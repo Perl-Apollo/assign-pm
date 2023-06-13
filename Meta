@@ -22,10 +22,15 @@ devel:
 
 requires:
   perl: 5.16.0
-  Filter::Simple: 0.95
-  PPI: 1.276
-  XXX: 0.38
-  YAML::PP: 0.036
+  Filter::Simple: '0.95'
+  PPI: '1.276'
+  Test::Simple: '1.302195'
+  XXX: '0.38'
+  YAML::PP: '0.036'
+
+test:
+  requires:
+    Capture::Tiny: '0.48'
 
 =zild:
   no-about: true

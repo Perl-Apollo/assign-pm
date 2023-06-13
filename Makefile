@@ -1,6 +1,6 @@
 SHELL := bash
 
-ZILD := clean dist distdir distshell disttest release update
+ZILD := clean cpan dist distdir distshell disttest release update
 
 export RELEASE_BRANCH := main
 
