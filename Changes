@@ -1,4 +1,9 @@
 ---
+version: 0.0.12
+date:    Tue Jun 13 10:49:57 AM CDT 2023
+changes:
+- Add Capture::Tiny to test.requires
+---
 version: 0.0.11
 date:    Tue Jun 13 10:17:25 AM CDT 2023
 changes:
