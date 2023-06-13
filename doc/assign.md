@@ -284,6 +284,7 @@ https://clojure.org/guides/destructuring)
 # Authors
 
 * Ingy döt Net `<ingy@ingy.net>`
+* Kang-min Liu `<gugod@gugod.org>`
 
 
 # Copyright and License
