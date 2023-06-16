@@ -1,4 +1,9 @@
 ---
+version: 0.0.14
+date:    Fri Jun 16 01:25:44 PM CDT 2023
+changes:
+- Don't set PERL5LIB in testing
+---
 version: 0.0.12
 date:    Tue Jun 13 10:49:57 AM CDT 2023
 changes:
