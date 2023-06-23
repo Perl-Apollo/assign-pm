@@ -11,6 +11,24 @@ my $c = $aref->[2];
 #line 1
 ...
 
+test <<'...', "Multi-line declaration";
+
+my [
+    $a,
+    $b,
+    $c,
+]
+    = $aref;
+print $b;
++++
+
+my $a = $aref->[0];
+my $b = $aref->[1];
+my $c = $aref->[2];
+#line 7
+print $b;
+...
+
 test <<'...', "Unpack a literal aref";
 my [ $a, $b, $c ] = [111, 222, 333];
 +++
