@@ -33,11 +33,21 @@ sub gen_code {
     my $code = [ @$init ];
     my $elems = $self->{elems};
 
+    if ($decl) {
+        push @$code,
+            "$decl(" .
+            join(', ',
+                map $_->val,
+                @$elems
+            ) .
+            ');';
+    }
+
     for my $elem (@$elems) {
         my $type = ref $elem;
         my $var = $elem->val;
         (my $key = $var) =~ s/^\$//;
-        push @$code, "$decl$var $oper $from\->{$key};";
+        push @$code, "$var $oper $from\->{$key};";
     }
 
     return join "\n", @$code;

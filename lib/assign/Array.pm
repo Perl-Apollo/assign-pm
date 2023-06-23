@@ -68,10 +68,21 @@ sub gen_code {
     my $code = [ @$init ];
     my $elems = $self->{elems};
 
+    if ($decl) {
+        push @$code,
+            "$decl(" .
+            join(', ',
+                map $_->val,
+                grep {$_->val ne '$_'}
+                grep {$_->val =~ /^[\$\@]/}
+                @$elems
+            ) .
+            ');';
+    }
+
     my $i = 0;
     for my $elem (@$elems) {
         my $type = ref $elem;
-        my $dec = $decl;
         if ($type eq 'skip') {
             $i++;
             next;
@@ -80,9 +91,6 @@ sub gen_code {
             $i += $elem->val;
             next;
         }
-        if ($elem->val eq '$_') {
-            $dec = '';
-        }
 
         my $var = $elem->val;
         my $def = $elem->{def} // '';
@@ -90,10 +98,10 @@ sub gen_code {
 
         push @$code,
             ($elem->sigil eq '@')
-                ? "$dec$var $oper \@$from\[$i..\@$from-1\]$def;" :
+                ? "$var $oper \@$from\[$i..\@$from-1\]$def;" :
             ($elem->{cast})
-                ? "$dec$var $oper \[\@$from\[$i..\@$from-1\]\]$def;" :
-            "$dec$var $oper $from\->[$i]$def;";
+                ? "$var $oper \[\@$from\[$i..\@$from-1\]\]$def;" :
+            "$var $oper $from\->[$i]$def;";
 
         $i++;
     }
