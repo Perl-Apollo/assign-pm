@@ -1,4 +1,11 @@
 ---
+version: 0.0.15
+date:    Sat Jun 24 11:09:15 AM EDT 2023
+changes:
+- Add a test for multi-line assignment statement
+- Put all code from assign.pm in assign::0
+- Refactor to declare vars before assignments
+---
 version: 0.0.14
 date:    Fri Jun 16 01:25:44 PM CDT 2023
 changes:
