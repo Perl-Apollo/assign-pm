@@ -291,6 +291,7 @@ https://clojure.org/guides/destructuring)
 
 Copyright 2023 by Ingy döt Net
 
-This is free software, licensed under:
+This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
-The MIT (X11) License
+See http://www.perl.com/perl/misc/Artistic.html
