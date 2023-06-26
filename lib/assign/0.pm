@@ -1,7 +1,7 @@
 use strict; use warnings;
 package assign::0;
 
-our $VERSION = '0.0.15';
+our $VERSION = '0.0.16';
 
 use assign::Array;
 use assign::Hash;

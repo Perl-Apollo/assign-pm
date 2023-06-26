@@ -1,6 +1,11 @@
 ---
+version: 0.0.16
+date:    Mon Jun 26 07:40:51 PM EDT 2023
+changes:
+- Change license to same terms as Perl
+---
 version: 0.0.15
-date:    Sat Jun 24 11:09:15 AM EDT 2023
+date:    sat jun 24 11:09:15 am edt 2023
 changes:
 - Add a test for multi-line assignment statement
 - Put all code from assign.pm in assign::0
