@@ -20,5 +20,8 @@ default:
 test:
 	$(harness) $(opts) $(test)
 
+prove:
+	prove $(opts) $(test)
+
 $(ZILD):
 	zild $@

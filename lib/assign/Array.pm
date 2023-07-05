@@ -4,6 +4,8 @@ package assign::Array;
 use assign::Struct;
 use base 'assign::Struct';
 
+use assign::Types;
+
 use XXX;
 
 sub parse_elem {
@@ -42,18 +44,18 @@ sub parse_elem {
         if ($type eq 'PPI::Token::Number') {
             my $str = $tok->content;
             if ($str =~ /^[1-9][0-9]*$/) {
-                push @$elems, skip_num->new($str);
+                push @$elems, assign::skip_num->new($str);
                 return 1;
             }
         }
         if ($type eq 'PPI::Token::Magic') {
             my $str = $tok->content;
             if ($str eq '_') {
-                push @$elems, skip->new;
+                push @$elems, assign::skip->new;
                 return 1;
             }
             if ($str eq '$_') {
-                push @$elems, var->new($str);
+                push @$elems, assign::var->new($str);
                 return 1;
             }
         }
@@ -83,11 +85,11 @@ sub gen_code {
     my $i = 0;
     for my $elem (@$elems) {
         my $type = ref $elem;
-        if ($type eq 'skip') {
+        if ($type eq 'assign::skip') {
             $i++;
             next;
         }
-        if ($type eq 'skip_num') {
+        if ($type eq 'assign::skip_num') {
             $i += $elem->val;
             next;
         }

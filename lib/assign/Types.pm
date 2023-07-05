@@ -3,7 +3,8 @@ package assign::Types;
 
 
 #------------------------------------------------------------------------------
-package var;
+package
+assign::var;
 
 sub new {
     my ($class, $var, $def) = @_;
@@ -20,7 +21,8 @@ sub sigil { substr($_[0]->{var}, 0, 1) }
 
 
 #------------------------------------------------------------------------------
-package skip;
+package
+assign::skip;
 
 sub new {
     my ($class) = @_;
@@ -33,7 +35,8 @@ sub val { ${$_[0]} }
 
 
 #------------------------------------------------------------------------------
-package skip_num;
+package
+assign::skip_num;
 use overload '""', \&stringify;
 
 sub new {

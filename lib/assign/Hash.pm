@@ -4,6 +4,8 @@ package assign::Hash;
 use assign::Struct;
 use base 'assign::Struct';
 
+use assign::Types;
+
 use XXX;
 
 sub parse_elem {
@@ -18,7 +20,7 @@ sub parse_elem {
         if ($type eq 'PPI::Token::Symbol') {
             my $str = $tok->content;
             if ($str =~ /^\$\w+$/) {
-                push @$elems, var->new($str);
+                push @$elems, assign::var->new($str);
                 return 1;
             }
         }
