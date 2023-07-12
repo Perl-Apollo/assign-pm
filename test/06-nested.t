@@ -1,6 +1,6 @@
 use assign::Test;
 
-test <<'...', "Unpack literal href into 'my' vars";
+test <<'...', "Unpack hash nested with array and hash";
 my { a => [ $a1, $a2], $b => {$b1, $b2} } = foo;
 +++
 my ($a1, $a2, $b, $b1, $b2);
