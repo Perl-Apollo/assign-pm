@@ -29,3 +29,14 @@ $b1 = $foo->{b}->[0];
 $b2 = $foo->{b}->[1];
 #line 1
 ...
+
+test <<'...', q!Unpack from: my $person = { name => 'Gugod', favs => ['tea', 'blue'] };!;
+my { $name, favs => [ $drink, $color ] } = $person;
++++
+my ($name);
+$name = $person->{name};
+my ($drink, $color);
+$drink = $person->{favs}->[0];
+$color = $person->{favs}->[1];
+#line 1
+...
