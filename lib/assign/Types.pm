@@ -11,6 +11,7 @@ sub new {
     bless {
         var => $var,
         def => $def,
+        deepkey => "",
     }, $class;
 }
 

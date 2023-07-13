@@ -98,12 +98,19 @@ sub gen_code {
         my $def = $elem->{def} // '';
         $def &&= " // $def";
 
-        push @$code,
-            ($elem->sigil eq '@')
-                ? "$var $oper \@$from\[$i..\@$from-1\]$def;" :
-            ($elem->{cast})
-                ? "$var $oper \[\@$from\[$i..\@$from-1\]\]$def;" :
-            "$var $oper $from\->[$i]$def;";
+        if ($elem->sigil eq '@' || $elem->{cast}) {
+            my $begin = $i;
+            my $end = abs(@$elems - $i);
+            $i = - $end;
+
+            push @$code,
+                ($elem->sigil eq '@')
+                ? "$var $oper \@$from\[$begin..\@$from-$end\]$def;"
+                : "$var $oper \[\@$from\[$begin..\@$from-$end\]\]$def;";
+        }
+        else {
+            push @$code, "$var $oper $from\->[$i]$def;";
+        }
 
         $i++;
     }

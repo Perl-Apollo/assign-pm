@@ -7,6 +7,7 @@ sub new {
     my $class = shift;
     bless {
         elems => [],
+        deepkey => "",
         @_,
     }, $class;
 }
@@ -37,7 +38,7 @@ sub parse {
 
     while (1) {
         $self->parse_elem or last;
-        $self->parse_comma or last;
+        $self->parse_optional_comma or last;
     }
 
     return $self;
@@ -59,6 +60,61 @@ sub parse_comma {
         else {
             XXX $tok, $in, "comma expected";
         }
+    }
+    return 0;
+}
+
+sub parse_optional_comma {
+    my ($self) = @_;
+    my $in = $self->{in};
+    while (@$in) {
+        my $tok = shift(@$in);
+        my $type = ref($tok);
+        next if $type eq 'PPI::Token::Whitespace';
+
+        if ($type eq 'PPI::Token::Operator' and
+            $tok->content eq ','
+        ) {
+            return 1;
+        }
+        else {
+            unshift(@$in, $tok);
+            last;
+        }
+    }
+    return 0;
+}
+
+sub parse_fat_comma {
+    my ($self) = @_;
+
+    $self->parse_whitespaces;
+
+    my $in = $self->{in};
+    while (@$in) {
+        my $tok = shift(@$in);
+        my $type = ref($tok);
+
+        if ($type eq 'PPI::Token::Operator' and
+            $tok->content eq '=>'
+        ) {
+            return 1;
+        }
+        else {
+            XXX $tok, $in, "fat comma expected";
+        }
+    }
+    return 0;
+}
+
+sub parse_whitespaces {
+    my ($self) = @_;
+    my $in = $self->{in};
+    while (@$in) {
+        my $tok = shift(@$in);
+        next if ref($tok) eq 'PPI::Token::Whitespace';
+        unshift @$in, $tok;
+        last;
     }
     return 0;
 }

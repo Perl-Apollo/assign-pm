@@ -1,0 +1,262 @@
+---- config
+title: Destructuring Syntax for Perl
+indent: 5
+auto_size: 1
+vim_opts: '-u NONE'
+skip: 0
+top: 1
+
+vimrc: |
+  source ./vimrc
+
+
+---- center
+Destructuring
+
+A New Syntax for Perl Assignment Statements
+
+by Ingy dot Net
+
+The Perl and Raku Conference
+July 13, 2023
+Toronto
+
+
+----
+== I Love Coffee!
+
++$ vim some.coffee
+
+$ coffee some.coffee
+
+
+----
+== A Short Drip, Please
+
+   {name, favs: [drink, color]} = person
+
++   name = person.name
+   drink = person.favs.drink
+   color = person.favs.color
+
+
+----
+== Introducing Destructuring Assignment
+
+* First saw it in CoffeeScript 10+ years ago
+
+* A way to concisely unpack a structure into variables
+
+* Lets us to write more concise and readable code
+
+
+----
+== Now JavaScript has it!
+
+$ vim destructure.js
+
+$ node destructure.js
+
+$ vim destructure.js destructure2.js -o
+
+$ node destructure2.js
+
+
+----
+== Coffee Tastes Better
+
+$ coffee -e '[a, b, ...m, y, z] = [1..10]; console.log [a, b, m, y, z]'
+
+$ node -e '[a, b, ...m, y, z] = [...Array(10).keys()]'
+
+
+----
+== Clojure has it!
+
+$ vim destructure.clj
+
+$ clojure -M -e '(load-file "destructure.clj")'
+
+
+----
+== OpenAI Says These 20 Languages Have It
+
+Clojure
+CoffeeScript
+Dart
+Elixir
+Erlang
+F#
+Go
+Groovy
+JavaScript
+Julia
+Kotlin
+Lua
+PHP
+Python
+Racket
+Ruby
+Rust
+Scala
+Swift
+TypeScript
+
+
+----
+== Now Perl has it too!!!
+
++== And it's Better than the Others!
+
++$ cpanm assign
+
++* https://metacpan.org/pod/assign
+
++    my { $name,
+         favs => [$drink, $color],
+    } = $person;
+
++    my $name = $person->{name};
+    my $drink = $person->{favs}[0];
+    my $color = $person->{favs}[1];
+
+
+$ vim destructure.js
+
+$ node destructure.js
+
+
+----
+== Perl Destructuring Basic Rules
+
+    use assign::0;
+    my [ $a, $b ] = $self->doit;
+
+* Use 'use assign::0;'
+* NOT 'use assign;'
+
+* Supports 'my', 'our', 'local', none or inline
+
+    [ my $a, our $b ] = $self->doit;
+
+* LHS is [] or {} literal array or hash reference syntax
+
+* RHS must be an array ref or hash ref (matching LHS type)
+
+* Will work anywhere assignments work
+  * Assignment statements
+  * Loop variables
+  * Function signatures
+  * etc
+
+
+----
+== Array Destructuring Forms
+
+my [ $a, $b, $c ] = $aref;
+
++my [ $a, $b, $c ] = (1, 2, 3);  # ERROR
+
++my ( $a, [$b, $c] ) = (1, [2, 3]);  # OK!
+
++my [ $a, $b, @c] = $aref;
+
++my [ $a, $b, @$c] = $aref;
+
++my [ $a, @$b, $c] = $aref;
+
++my [ $a, $b, @$m, $y, $z] = $aref;
+
++my [ $a, _, $c] = $aref;
+my [ $a, undef, $c] = $aref;
+
++my [ $a, @, $z] = $aref;
+
++my [ $a, $_, $c] = $aref;
+
++my [ $a, 24, $z] = $aref;
+
++my [ $a, 11, $m, 12, $z] = $aref;
+
+
+----
+== Hash Destructuring Forms
+
+my {$a, $b, $c} = $href;
+
++my {$a, b => [$b1, $b2]} = $href;
+
++my {$a, $b => [$b1, $b2]} = $href;
+
++my {a => $foo, b => $bar, $c} = $href;
+
++my {$a, $b=42, $c='foo'} = $href;   # Defaults= values
+
++my {$a!, $b, $c!} = $href;          # Required keys
+
++my {'a key', 'another/key'} = $href;
++my {'a key' => $a_key, 'another/key' => $another_key} = $href;
+
++my {@$keys} = $href;
++my {_ => @$vals} = $href;
++my {@$keys => @$vals} = $href;   # unzip hash ref
+
++my [@$keys, @$vals] = $href;   # sorted
+
+
+----
+== More Forms!
+
+[ $a, $b ] //= $d;    # Only assign undefined variables
+[ $a, $b ] .= $d;     # Append string to every var
+[ $a, $b ] += $d;     # Add number to every var
+
++for my { k => [ $a1, $a2 ]} (@list) { ...
+
++for my { $k => $v } (%hash) { ...
+
++sub foo {
+    my ($self, { $b, c => [$c1, $c2] }) = @_;
+
++sub foo($self, { $b, c => [$c1, $c2] }) { ...
+
+# Regex:
+my [ $match, $cap1, $cap2 ] = $str =~ /…/;
+my [ $match, $cap1, $cap2 ] = /…/;  # Match using $_
+
++my [ $a, @$m{reverse}, $z ] = $aref;
++my [ $a, @$l{map ($_ + 1), grep ($_ > 10)}, $z ] = $aref;
++my [ $a, @{join '-'} => $s, $z ] = $d;
+
+
+----
+== Current Implementation
+
+* This is a Prototype
+
+* But a Usable & Supported Prototype on CPAN!
+
+* It uses Filter::Simple and PPI
+
+
+----
+== Getting This Into Perl 5 Core
+
+
+----
+== The End
+
+* I want your feedback and ideas!
+
+* https://github.com/ingydotnet/assign-pm
+
+
+----
+== Extra Stuff
+my [ $a!, $b ] =    # die if not $a
+
+my [ $a, $b=42 ] =
+
+for my { name, favs: [ drink, color ] } (@l) {}
+
+sub foo({ name, favs: [ drink, color ] }) {}

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+read -r file
+read -r line
+
+line=${line#\* }
+
+if [[ $line == https://* ]]; then
+  if [[ $OSTYPE == darwin* ]]; then
+    open "$line"
+  else
+    xdg-open "$line"
+  fi
+
+elif [[ $line == \$\ * ]]; then
+  line=${line#\$\ }
+
+  if [[ $line == vim\ * ]]; then
+    line=${line/vim\ /vim --not-a-term }
+  fi
+
+  clear
+  echo "+ $line"
+  echo
+  # sleep .5
+
+  if [[ $line =~ [\>\<\|] ]]; then
+    eval "$line"
+  else
+    eval "$line </dev/tty"
+  fi
+fi
