@@ -7,6 +7,7 @@ sub new {
     my $class = shift;
     bless {
         elems => [],
+        deepkey => "",
         @_,
     }, $class;
 }
@@ -37,7 +38,7 @@ sub parse {
 
     while (1) {
         $self->parse_elem or last;
-        $self->parse_comma or last;
+        $self->parse_optional_comma or last;
     }
 
     return $self;
