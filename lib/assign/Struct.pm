@@ -63,6 +63,27 @@ sub parse_comma {
     return 0;
 }
 
+sub parse_optional_comma {
+    my ($self) = @_;
+    my $in = $self->{in};
+    while (@$in) {
+        my $tok = shift(@$in);
+        my $type = ref($tok);
+        next if $type eq 'PPI::Token::Whitespace';
+
+        if ($type eq 'PPI::Token::Operator' and
+            $tok->content eq ','
+        ) {
+            return 1;
+        }
+        else {
+            unshift(@$in, $tok);
+            last;
+        }
+    }
+    return 0;
+}
+
 sub parse_fat_comma {
     my ($self) = @_;
 
