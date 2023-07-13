@@ -63,6 +63,40 @@ sub parse_comma {
     return 0;
 }
 
+sub parse_fat_comma {
+    my ($self) = @_;
+
+    $self->parse_whitespaces;
+
+    my $in = $self->{in};
+    while (@$in) {
+        my $tok = shift(@$in);
+        my $type = ref($tok);
+
+        if ($type eq 'PPI::Token::Operator' and
+            $tok->content eq '=>'
+        ) {
+            return 1;
+        }
+        else {
+            XXX $tok, $in, "fat comma expected";
+        }
+    }
+    return 0;
+}
+
+sub parse_whitespaces {
+    my ($self) = @_;
+    my $in = $self->{in};
+    while (@$in) {
+        my $tok = shift(@$in);
+        next if ref($tok) eq 'PPI::Token::Whitespace';
+        unshift @$in, $tok;
+        last;
+    }
+    return 0;
+}
+
 sub get_var {
     my ($self, $var) = @_;
     my $def;
